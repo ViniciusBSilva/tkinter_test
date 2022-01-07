@@ -5,7 +5,7 @@ Created on Thu Jan  6 13:41:47 2022
 @author: vinsilva
 """
 
-from tkinter import *
+import tkinter as tk
 
 class CalcButton:
     def __init__(self, frame, text, width, bg, function):
@@ -20,7 +20,7 @@ class CalcButton:
         self.command = function
 
     def create(self):
-        return Button(self.frame, 
+        return tk.Button(self.frame, 
                       text = self.text,
                       fg = self.fg,
                       width = self.width,
@@ -32,48 +32,48 @@ class CalcButton:
 
 
 class NumCalcButton(CalcButton):
-    def __init__(self, frame, text):
+    def __init__(self, frame, text, function):
         super().__init__(frame, 
                          text, 
                          10, 
-                         '#fff', 
-                         lambda: btn_click(int(text)))
+                         '#eee', 
+                         function)
 
 
 class ZeroNumCalcButton(CalcButton):
-    def __init__(self, frame):
+    def __init__(self, frame, function):
         super().__init__(frame, 
                          '0', 
                          21, 
-                         '#fff', 
-                         lambda: btn_click(0))
+                         '#eee', 
+                         function)
 
 
 class SpecCalcButton(CalcButton):
-    def __init__(self, frame, text):
+    def __init__(self, frame, text, function):
         super().__init__(frame, 
                          text, 
                          10, 
-                         '#eee', 
-                         lambda: btn_click(text))
+                         '#ccc', 
+                         function)
 
 
 class EqCalcButton(CalcButton):
-    def __init__(self, frame, text):
+    def __init__(self, frame, function):
         super().__init__(frame, 
-                         text, 
+                         '=', 
                          10, 
-                         '#eee', 
-                         lambda: btn_equal())
+                         '#666', 
+                         function)
 
 
 class ClearCalcButton(CalcButton):
-    def __init__(self, frame):
+    def __init__(self, frame, function):
         super().__init__(frame, 
                          'C', 
                          32, 
-                         '#eee', 
-                         lambda: btn_clear())
+                         '#ccc', 
+                         function)
 
 
 class Calculator:
@@ -88,7 +88,7 @@ class Calculator:
     
     
     def createWindow(self):
-        self.window = Tk()
+        self.window = tk.Tk()
         self.window.geometry('312x324')
         self.window.resizable(0, 0) # this prevents from resizing the window
         self.window.title('Calculator')
@@ -99,57 +99,114 @@ class Calculator:
         
         
     def createFrames(self):
-        self.input_text = StringVar()
+        self.input_text = tk.StringVar()
         
         # creating a frame for the input field
-        self.input_frame = Frame(self.window, width=312, height=50, 
+        self.input_frame = tk.Frame(self.window, width=312, height=50, 
                             bd=0, highlightbackground='black',
                             highlightcolor='black', highlightthickness=1)
-        self.input_frame.pack(side=TOP)
+        self.input_frame.pack(side=tk.TOP)
         
         # creating a input field inside the 'Frame'
-        input_field = Entry(self.input_frame, font=('arial', 18, 'bold'),
-                            textvariable=self.input_text, width=50, bg='#eee',
-                            bd=0, justify=RIGHT)
-        input_field.grid(row=0, column=0)
+        self.input_field = tk.Entry(
+            self.input_frame, font=('arial', 18, 'bold'),
+            textvariable=self.input_text, width=50, bg='#333', fg='white',
+            bd=0, justify=tk.RIGHT)
+        self.input_field.grid(row=0, column=0)
         # 'ipady' is internal padding to increase the height of input field
-        input_field.pack(ipady=10) 
+        self.input_field.pack(ipady=10) 
         
         # creating another 'Frame' for the button below the 'input_frame'
-        self.btns_frame = Frame(self.window, width=312, height=272.5, bg='grey')
+        self.btns_frame = tk.Frame(
+            self.window, width=312, height=272.5, bg='grey')
         self.btns_frame.pack()
         
     
     def createButtons(self):
         # first row
-        clear = ClearCalcButton(
-            self.btns_frame).create().grid(row=0, column=0, columnspan=3, 
-                                           padx=1, pady=1)
-        divide = ''
+        btn_clear = self.createClearCalcButton().grid(
+            row=0, column=0, columnspan=3, padx=1, pady=1)
+        btn_divide = self.createSpecCalcButton('/').grid(
+            row=0, column=3,  padx=1, pady=1)
         
         # second row
-        seven = ''
-        eight = ''
-        nine = ''
-        multiply = ''
+        btn_seven = self.createNumCalcButton('7').grid(
+            row=1,column=0, padx=1, pady=1)
+        btn_eight = self.createNumCalcButton('8').grid(
+            row=1,column=1, padx=1, pady=1)
+        btn_nine = self.createNumCalcButton('9').grid(
+            row=1,column=2, padx=1, pady=1)
+        btn_multiply = self.createSpecCalcButton('*').grid(
+            row=1, column=3, padx=1, pady=1)
         
         # third row
-        four = ''
-        five = ''
-        six = ''
-        minus = ''
+        btn_four = self.createNumCalcButton('4').grid(
+            row=2,column=0, padx=1, pady=1)
+        btn_five = self.createNumCalcButton('5').grid(
+            row=2,column=1, padx=1, pady=1)
+        btn_six = self.createNumCalcButton('6').grid(
+            row=2,column=2, padx=1, pady=1)
+        btn_minus = self.createSpecCalcButton('-').grid(
+            row=2, column=3, padx=1, pady=1)
         
         # fourth row
-        one = ''
-        two = ''
-        three = ''
-        plus = ''
+        btn_one = self.createNumCalcButton('1').grid(
+            row=3,column=0, padx=1, pady=1)
+        btn_two = self.createNumCalcButton('2').grid(
+            row=3,column=1, padx=1, pady=1)
+        btn_three = self.createNumCalcButton('3').grid(
+            row=3,column=2, padx=1, pady=1)
+        btn_plus = self.createSpecCalcButton('+').grid(
+            row=3, column=3, padx=1, pady=1)
         
         # fifth row
-        zero = ''
-        point = ''
-        equals = ''
+        btn_zero = self.createZeroNumCalcButton().grid(
+            row=4, column=0, columnspan=2, padx=1, pady=1)
+        btn_point = self.createSpecCalcButton('.').grid(
+            row=4, column=2, padx=1, pady=1)
+        btn_equals = self.createEqCalcButton().grid(
+            row=4, column=3, padx=1, pady=1)
+                                          
+    def createNumCalcButton(self, text):
+        return NumCalcButton(
+            self.btns_frame, 
+            text, 
+            lambda: self.btnClick(text)).create()
+
+    def createZeroNumCalcButton(self):
+        return ZeroNumCalcButton(
+            self.btns_frame, 
+            lambda: self.btnClick('0')).create()
+
+    def createSpecCalcButton(self, text):
+        return SpecCalcButton(
+            self.btns_frame, 
+            text, 
+            lambda: self.btnClick(text)).create()
         
+    def createEqCalcButton(self):
+        return EqCalcButton(
+            self.btns_frame, 
+            lambda: self.btnEqual()).create()
+    
+    def createClearCalcButton(self):
+        return ClearCalcButton(
+            self.btns_frame, 
+            lambda: self.btnClear()).create()
+                                            
+    def btnClick(self, item):
+        self.expression = self.expression + item
+        self.input_text.set(self.expression)
+    
+    def btnClear(self):
+        self.expression = ''
+        self.input_text.set('')
+    
+    def btnEqual(self):
+        # 'eval' function evalutes the string expression directly
+        result = str(eval(self.expression))
+        self.input_text.set(result)
+        self.expression = ''
         
 # main
 calc = Calculator()    
